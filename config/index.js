@@ -21,7 +21,7 @@ module.exports = {
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
     proxyTable: {
       '/api': {//这里是我配置的名字
-        target: 'https://92x19704r2.goho.co', //这个路径是我代理到本地tp框架里面
+        target: 'https://9219rw7mg042.vicp.fun', //这个路径是我代理到本地tp框架里面
         changeOrigin: true, //开启代理
         pathRewrite: { '^/api': '/' } //这里重写路径/run就代理到对应地址
       }

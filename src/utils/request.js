@@ -4,9 +4,17 @@ import { Message, MessageBox } from 'element-ui'
 import store from '../store'
 import { getToken } from '@/utils/auth'
 
+let isDev = true
+console.log(process.env.NODE_ENV)
+if (process.env.NODE_ENV === 'development') {
+  isDev = true
+} else {
+  isDev = false
+}
+
 // 创建axios实例
 const service = axios.create({
-  baseURL: process.env.BASE_API, // api的base_url
+  baseURL: isDev?process.env.BASE_API:window.global.baseURL, // api的base_url
   timeout: 15000 // 请求超时时间
 })
 
@@ -17,8 +25,8 @@ service.interceptors.request.use(config => {
   }
   if (config.method === 'get' && config.params) {
     // config.url += '?' + qs.stringify(config.params, { indices: false });
-    config.paramsSerializer=(params)=>{
-      return qs.stringify(params,{indices:false})
+    config.paramsSerializer = (params) => {
+      return qs.stringify(params, { indices: false })
     }
   }
   return config
@@ -35,16 +43,16 @@ service.interceptors.response.use(
     * code为非200是抛错 可结合自己业务进行修改
     */
     const res = response.data
-    if(res instanceof Blob){
-      const link=document.createElement('a')
-      const blob=new Blob([res])
-      let fileName=''
-      if(response.headers['content-disposition']){
-        fileName=response.headers['content-disposition'].replace(/\w+;filename=(.*)/,'$1')
+    if (res instanceof Blob) {
+      const link = document.createElement('a')
+      const blob = new Blob([res])
+      let fileName = ''
+      if (response.headers['content-disposition']) {
+        fileName = response.headers['content-disposition'].replace(/\w+;filename=(.*)/, '$1')
       }
-      link.href=window.URL.createObjectURL(blob)
-      link.download=fileName
-      link.style.display='none'
+      link.href = window.URL.createObjectURL(blob)
+      link.download = fileName
+      link.style.display = 'none'
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
